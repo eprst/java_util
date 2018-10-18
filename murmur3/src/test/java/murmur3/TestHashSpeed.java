@@ -1,15 +1,16 @@
-package util.hash;
+package murmur3;
 
-import junit.framework.TestCase;
+import murmur3.MurmurHash3;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
  * @author yonik
  */
 public class TestHashSpeed {
-  static  Charset utf8Charset = Charset.forName("UTF-8");
+  private static  Charset utf8Charset = Charset.forName("UTF-8");
 
   public static void main(String[] args) throws Exception {
     int arg = 0;
@@ -21,7 +22,7 @@ public class TestHashSpeed {
     for (int i=0; i<arr.length; i++) {
       arr[i] = (byte)(i & 0x7f);
     }
-    String s = new String(arr, "UTF-8");
+    String s = new String(arr, StandardCharsets.UTF_8);
 
     int ret = 0;
     long start = System.currentTimeMillis();

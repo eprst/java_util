@@ -1,0 +1,15 @@
+plugins {
+  id 'com.github.ben-manes.versions' version '0.20.0'
+}
+
+subprojects {
+  apply plugin: 'java'
+
+  repositories {
+    mavenCentral()
+  }
+
+  tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+  }
+}
