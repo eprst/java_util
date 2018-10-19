@@ -1,4 +1,5 @@
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+[![Build Status](https://travis-ci.com/eprst/murmur3.svg?branch=master)](https://travis-ci.com/eprst/murmur3)
 
 Fast Murmur3 hash implementation for Java, mostly a fork of
 [yonik](https://github.com/yonik/java_util) work with

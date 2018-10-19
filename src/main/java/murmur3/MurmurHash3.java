@@ -346,8 +346,12 @@ public final class MurmurHash3 {
     out.val2 = h2;
   }
 
-  // String-optimized version added by Konstantin
-  /** Returns the MurmurHash3_x64_128 hash, placing the result in "out". Not thread safe */
+  // String-optimized 128-bit version added by konstantin.sobolev@gmail.com
+
+  /**
+   * Returns the MurmurHash3_x86_128 hash of the UTF-8 bytes of the String without actually encoding
+   * the string to a temporary buffer. Results are placed in {@code out}. Not thread safe.
+   */
   public void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, LongPair out) {
 
     // The original algorithm does have a 32 bit unsigned seed.
@@ -415,7 +419,6 @@ public final class MurmurHash3 {
         encOffset -= 16;
         bytes += 16;
       } else {
-        // underfill
         bytes += encOffset;
         break;
       }

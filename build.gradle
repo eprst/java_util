@@ -3,6 +3,10 @@ plugins {
   id "me.champeau.gradle.jmh" version "0.4.7"
 }
 
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 repositories {
   mavenCentral()
 }
@@ -13,16 +17,87 @@ dependencies {
   testCompile 'junit:junit:4.12'
 }
 
-apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 compileJava {
   options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 }
 
+javadoc {
+  options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 test {
   afterTest { desc, result ->
     logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+  }
+}
+
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
+tasks.withType(Sign) {
+  onlyIf { isReleaseVersion }
+}
+
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Murmur3'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'Fast Murmur3 hash implementation for Java'
+        url 'https://github.com/eprst/murmur3'
+
+        scm {
+          connection 'scm:git:git://github.com/eprst/murmur.git'
+          developerConnection 'scm:git:git@github.com/eprst/murmur.git'
+          url 'https://github.com/eprst/murmur3'
+        }
+
+        licenses {
+          license {
+            name 'Unlicense'
+            url 'https://unlicense.org'
+          }
+        }
+
+        developers {
+          developer {
+            id 'eprst'
+            name 'Konstantin Sobolev'
+            email 'konstantin.sobolev@gmail.com'
+          }
+        }
+      }
+    }
   }
 }
