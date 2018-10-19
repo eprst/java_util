@@ -1,7 +1,5 @@
 package murmur3;
 
-import murmur3.MurmurHash3;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 

@@ -1,7 +1,6 @@
 package murmur3;
 
 import junit.framework.TestCase;
-import murmur3.MurmurHash3;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

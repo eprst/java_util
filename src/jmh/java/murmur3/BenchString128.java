@@ -14,7 +14,7 @@ import java.util.Random;
 @SuppressWarnings("UnstableApiUsage")
 @Warmup(iterations = 5)
 @Measurement(iterations = 10)
-@Threads(1)
+@Fork(1)
 public class BenchString128 {
 
   @State(Scope.Thread)

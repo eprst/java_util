@@ -370,8 +370,6 @@ public final class MurmurHash3 {
         char code = data.charAt(pos++);
 
         if (code < 0x80) {
-          // todo optimize for ascii
-          // https://github.com/square/okio/commit/b2d19a9faee2e006339cf5a3e0a31378711e7f5f#diff-67072d8af738124ac6563e73f8bd8f50
           encoded[encOffset++] = (byte) code;
         } else if (code < 0x800) {
           encoded[encOffset++] = (byte) (0xc0 | code >> 6);
