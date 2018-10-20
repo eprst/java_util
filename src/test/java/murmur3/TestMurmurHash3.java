@@ -1,5 +1,8 @@
 package murmur3;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import junit.framework.TestCase;
 
 import java.nio.charset.Charset;
@@ -10,6 +13,8 @@ import java.util.Random;
  * @author yonik
  */
 public class TestMurmurHash3 extends TestCase {
+  private final HashFunction guavaHash32 = Hashing.murmur3_32(123456789);
+  private final HashFunction guavaHash128 = Hashing.murmur3_128(123456789);
 
   public void testCorrectValues() {
     byte[] bytes =
@@ -57,12 +62,25 @@ public class TestMurmurHash3 extends TestCase {
       hash2 = MurmurHash3.murmurhash3_x86_32(s, pre, s.length() - pre - post, 123456789);
     }
     assertEquals(hash1, hash2);
+
+    // from http://yonik.com/murmurhash3-for-java/ :
+    // "The guava implementation does not match the reference C++ implementation for all seeds!"
+    // so sometimes I'm getting different results for 32-bit version
+
+//    HashCode guava32 = guavaHash32.hashString(s.substring(pre, s.length() - post), utf8Charset);
+//    if (guava32.asInt() != hash1) {
+//      System.out.println(StringEscapeUtils.escapeJava(s.substring(pre, s.length() - post)));
+//    }
+//    assertEquals(guava32.asInt(), hash1);
     // now for 128
     MurmurHash3.LongPair r1 = new MurmurHash3.LongPair();
     MurmurHash3.LongPair r2 = new MurmurHash3.LongPair();
     MurmurHash3.murmurhash3_x64_128(utf8, pre, utf8.length - pre - post, 123456789, r1);
     new MurmurHash3().murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, r2);
     assertEquals(r1, r2);
+    HashCode guava128 = guavaHash128.hashString(s.substring(pre, s.length() - post), utf8Charset);
+    assertEquals(guava128.asLong(), r1.val1);
+    assertEquals(guava128, HashCode.fromBytes(r1.getBytes()));
   }
 
   public void testStringHash() {
@@ -115,6 +133,27 @@ public class TestMurmurHash3 extends TestCase {
       doString(s, pre, post);
     }
 
+  }
+
+  public void testRandomAscii() {
+    RandomStringsGenerator rsg = new RandomStringsGenerator();
+    Random r = new Random();
+    for (int i = 0; i < 10000; i++) {
+      int len = r.nextInt(256);
+      String s = rsg.randomAscii(len);
+      doString(s);
+    }
+  }
+
+  // there already a test for it above, but I want another one.
+  public void testRandomUnicode() {
+    RandomStringsGenerator rsg = new RandomStringsGenerator();
+    Random r = new Random();
+    for (int i = 0; i < 10000; i++) {
+      int len = r.nextInt(256);
+      String s = rsg.randomUnicode(len);
+      doString(s);
+    }
   }
 
 }

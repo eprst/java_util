@@ -26,8 +26,31 @@ public final class MurmurHash3 {
 
   /** 128 bits of state */
   public static final class LongPair {
+    /** First part of the hash, use it if you only need 64-bit hash */
     public long val1;
+    /** Second part of the hash */
     public long val2;
+
+    public byte[] getBytes() {
+      return new byte[]{
+          (byte) val1,
+          (byte) (val1 >> 8),
+          (byte) (val1 >> 16),
+          (byte) (val1 >> 24),
+          (byte) (val1 >> 32),
+          (byte) (val1 >> 40),
+          (byte) (val1 >> 48),
+          (byte) (val1 >> 56),
+          (byte) val2,
+          (byte) (val2 >> 8),
+          (byte) (val2 >> 16),
+          (byte) (val2 >> 24),
+          (byte) (val2 >> 32),
+          (byte) (val2 >> 40),
+          (byte) (val2 >> 48),
+          (byte) (val2 >> 56),
+      };
+    }
 
     @Override
     public boolean equals(final Object o) {
@@ -42,6 +65,18 @@ public final class MurmurHash3 {
     public int hashCode() {
       return Objects.hash(val1, val2);
     }
+
+    @Override
+    public final String toString() {
+      byte[] bytes = getBytes();
+      StringBuilder sb = new StringBuilder(2 * bytes.length);
+      for (byte b : bytes) {
+        sb.append(hexDigits[(b >> 4) & 0xf]).append(hexDigits[b & 0xf]);
+      }
+      return sb.toString();
+    }
+
+    private static final char[] hexDigits = "0123456789abcdef".toCharArray();
   }
 
   public static int fmix32(int h) {

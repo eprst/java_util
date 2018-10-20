@@ -12,22 +12,21 @@ import java.util.Random;
  * @author <a href="mailto:konstantin.sobolev@gmail.com">Konstantin Sobolev</a>
  */
 @SuppressWarnings("UnstableApiUsage")
-@Warmup(iterations = 5)
-@Measurement(iterations = 10)
-@Fork(1)
+@Warmup(iterations = 10)
+@Measurement(iterations = 20)
 public class BenchString128 {
 
   @State(Scope.Thread)
   public static class MyState {
     final MurmurHash3 murmur3 = new MurmurHash3();
-    final HashFunction guavaHash = Hashing.murmur3_128();
+    final HashFunction guavaHash = Hashing.murmur3_128(0);
   }
 
   @Benchmark
   public void guavaUnicode(MyState state) {
     HashFunction hashFunction = state.guavaHash;
     for (String s : UNICODE_STRINGS) {
-      hashFunction.hashBytes(s.getBytes(StandardCharsets.UTF_8));
+      hashFunction.hashString(s, StandardCharsets.UTF_8);
     }
   }
 
@@ -35,7 +34,7 @@ public class BenchString128 {
   public void guavaAscii(MyState state) {
     HashFunction hashFunction = state.guavaHash;
     for (String s : ASCII_STRINGS) {
-      hashFunction.hashBytes(s.getBytes(StandardCharsets.UTF_8));
+      hashFunction.hashString(s, StandardCharsets.UTF_8);
     }
   }
 
@@ -84,38 +83,11 @@ public class BenchString128 {
 
   private static void generateUnicodeStrings(int maxLen) {
     StringBuilder res = new StringBuilder("  private static final String[] UNICODE_STRINGS = new String[]{\n");
+    RandomStringsGenerator rsg = new RandomStringsGenerator();
     Random r = new Random();
-    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < 100; i++) {
-      sb.setLength(0);
       int len = 1 + r.nextInt(maxLen - 1);
-
-      for (int j = 0; j < len; j++) {
-        int codePoint;
-        do {
-          int max = 0;
-          switch (r.nextInt() & 0x3) {
-            case 0:
-              max = 0x80;
-              break;   // 1 UTF8 bytes
-            case 1:
-              max = 0x800;
-              break;  // up to 2 bytes
-            case 2:
-              max = 0xffff + 1;
-              break; // up to 3 bytes
-            case 3:
-              max = Character.MAX_CODE_POINT + 1; // up to 4 bytes
-          }
-
-          codePoint = r.nextInt(max);
-        } while (codePoint < 0xffff &&
-                 (Character.isHighSurrogate((char) codePoint) || Character.isLowSurrogate((char) codePoint)));
-
-        sb.appendCodePoint(codePoint);
-      }
-
-      String s = sb.toString();
+      String s = rsg.randomUnicode(len);
       res.append("    \"");
       res.append(StringEscapeUtils.escapeJava(s));
       res.append("\",\n");
@@ -125,16 +97,12 @@ public class BenchString128 {
   }
 
   private static void generateAsciiStrings(int maxLen) {
+    RandomStringsGenerator rsg = new RandomStringsGenerator();
     Random random = new Random();
     StringBuilder res = new StringBuilder("  private static final String[] ASCII_STRINGS = new String[]{\n");
     for (int k = 0; k < 100; k++) {
       int len = 1 + random.nextInt(maxLen - 1);
-      String s = random.ints(48, 122)
-          .filter(i -> (i < 57 || i > 65) && (i < 90 || i > 97))
-          .mapToObj(i -> (char) i)
-          .limit(len)
-          .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-          .toString();
+      String s = rsg.randomAscii(len);
       res.append("    \"");
       res.append(StringEscapeUtils.escapeJava(s));
       res.append("\",\n");
