@@ -4,4 +4,4 @@
 build
 out
 secret-keys.gpg
-upload.sh
+release.sh
