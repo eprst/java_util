@@ -18,59 +18,51 @@ public class BenchString128 {
 
   @State(Scope.Thread)
   public static class MyState {
-    final MurmurHash3 murmur3 = new MurmurHash3();
     final HashFunction guavaHash = Hashing.murmur3_128(0);
+    final MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
   }
 
   @Benchmark
   public void guavaUnicode(MyState state) {
-    HashFunction hashFunction = state.guavaHash;
     for (String s : UNICODE_STRINGS) {
-      hashFunction.hashString(s, StandardCharsets.UTF_8);
+      state.guavaHash.hashString(s, StandardCharsets.UTF_8);
     }
   }
 
   @Benchmark
   public void guavaAscii(MyState state) {
-    HashFunction hashFunction = state.guavaHash;
     for (String s : ASCII_STRINGS) {
-      hashFunction.hashString(s, StandardCharsets.UTF_8);
+      state.guavaHash.hashString(s, StandardCharsets.UTF_8);
     }
   }
 
   @Benchmark
-  public void murmurUnicodeBytes() {
-    MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
+  public void murmurUnicodeBytes(MyState state) {
     for (String s : UNICODE_STRINGS) {
       byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, pair);
+      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.pair);
     }
   }
 
   @Benchmark
-  public void murmurAsciiBytes() {
-    MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
+  public void murmurAsciiBytes(MyState state) {
     for (String s : ASCII_STRINGS) {
       byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, pair);
+      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.pair);
     }
   }
 
   @Benchmark
   public void murmurUnicodeString(MyState state) {
-    MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
-    MurmurHash3 murmurHash3 = state.murmur3;
     for (String s : UNICODE_STRINGS) {
-      murmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.pair);
     }
   }
 
   @Benchmark
   public void murmurAsciiString(MyState state) {
-    MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
-    MurmurHash3 murmurHash3 = state.murmur3;
     for (String s : ASCII_STRINGS) {
-      murmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.pair);
     }
   }
 

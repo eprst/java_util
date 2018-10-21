@@ -16,15 +16,15 @@ Here are results for 128-bit hash on my laptop, run `./gradlew jmh` to reproduce
 ACSCII (1-128 characters strings)
 ```
 Benchmark                            Mode  Cnt      Score      Error  Units
-BenchString128.guavaAscii           thrpt   10  33578.136 ± 1278.306  ops/s
-BenchString128.murmurAsciiBytes     thrpt   10  71952.571 ± 2704.746  ops/s
-BenchString128.murmurAsciiString    thrpt   10  74314.292 ± 2875.555  ops/s
+BenchString128.guavaAscii           thrpt  100  38820.061 ±  767.128  ops/s
+BenchString128.murmurAsciiBytes     thrpt  100  79370.216 ± 1014.949  ops/s
+BenchString128.murmurAsciiString    thrpt  100  80878.349 ±  732.596  ops/s
 ```
 
 Unicode (1-64 character strings)
 ```
 Benchmark                            Mode  Cnt      Score      Error  Units
-BenchString128.guavaUnicode         thrpt   10  18568.165 ±  866.071  ops/s
-BenchString128.murmurUnicodeBytes   thrpt   10  28325.267 ±  754.416  ops/s
-BenchString128.murmurUnicodeString  thrpt   10  35280.266 ±  576.442  ops/s
+BenchString128.guavaUnicode         thrpt  100  22044.362 ±  228.743  ops/s
+BenchString128.murmurUnicodeBytes   thrpt  100  32272.569 ±  635.764  ops/s
+BenchString128.murmurUnicodeString  thrpt  100  36704.326 ±  237.645  ops/s
 ```

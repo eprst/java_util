@@ -72,11 +72,12 @@ public class TestMurmurHash3 extends TestCase {
 //      System.out.println(StringEscapeUtils.escapeJava(s.substring(pre, s.length() - post)));
 //    }
 //    assertEquals(guava32.asInt(), hash1);
+
     // now for 128
     MurmurHash3.LongPair r1 = new MurmurHash3.LongPair();
     MurmurHash3.LongPair r2 = new MurmurHash3.LongPair();
     MurmurHash3.murmurhash3_x64_128(utf8, pre, utf8.length - pre - post, 123456789, r1);
-    new MurmurHash3().murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, r2);
+    MurmurHash3.murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, r2);
     assertEquals(r1, r2);
     HashCode guava128 = guavaHash128.hashString(s.substring(pre, s.length() - post), utf8Charset);
     assertEquals(guava128.asLong(), r1.val1);

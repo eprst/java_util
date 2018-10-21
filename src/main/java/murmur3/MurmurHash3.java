@@ -19,11 +19,6 @@ import java.util.Objects;
  * algorithms are optimized for their respective platforms.
  */
 public final class MurmurHash3 {
-  // temp buffer used by murmurhash3_x64_128(java.lang.CharSequence, int, int, int, util.hash.MurmurHash3.LongPair)
-  // unfortunately (even with escape analysis) JVM still can't allocate it on the stack, and heap allocations
-  // hurt performance
-  private final byte[] encoded = new byte[8 + 8 + 3];
-
   /** 128 bits of state */
   public static final class LongPair {
     /** First part of the hash, use it if you only need 64-bit hash */
@@ -385,9 +380,10 @@ public final class MurmurHash3 {
 
   /**
    * Returns the MurmurHash3_x86_128 hash of the UTF-8 bytes of the String without actually encoding
-   * the string to a temporary buffer. Results are placed in {@code out}. Not thread safe.
+   * the string to a temporary buffer. Results are placed in {@code out}.
    */
-  public void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, LongPair out) {
+  public static void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, LongPair out) {
+    final byte[] encoded = new byte[19];
 
     // The original algorithm does have a 32 bit unsigned seed.
     // We have to mask to match the behavior of the unsigned types and prevent sign extension.
