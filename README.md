@@ -6,15 +6,28 @@ Fast Murmur3 hash implementation for Java, mostly a fork of
 String-optimized 128-bit implementation added. See [blog post](http://yonik.com/murmurhash3-for-java/)
 about the original implementation.
 
-String optimization assumes UTF-8 strings and is based on avoiding
-[quite expensive](http://www.evanjones.ca/software/java-string-encoding-internals.html) call to
-`String.getBytes` and decoding small chunks on the go instead.
+There are 3 128-bit versions provided:
+- `murmurhash3_x64_128` which takes a byte buffer to hash
+- `murmurhash3_x64_128` which takes a `CharSequence` and treats it as a UTF-8 encoded string. It doesn't
+call a [quite expensive](http://www.evanjones.ca/software/java-string-encoding-internals.html) call to
+`String.getBytes` and decoding small chunks on the go instead. It runs in constant memory and uses a 19 element
+byte buffer which can be provided by the caller to avoid any allocations. See memory charts below to see the difference
+in memory consumption
+- `murmurhash3_x64_128_ascii` which takes a `CharSequence` and treats it as UTF-8 encoded string which contains
+only ASCII characters. Has zero allocations and provides a significant performance boost.
 
-There is also an ASCII-optimized `murmurhash3_x64_128_ascii` version which expects ASCII-only UTF-8 strings
-and gives big performance boost.
+There are no checks made around string decoding operations, so wrong hashes will be generated if a non-ASCII characters
+are passed to `murmurhash3_x64_128_ascii` or `murmurhash3_x64_128` receives an illegal UTF-8 string, no errors will be
+raised. 
 
 # Performance
 Here are results for 128-bit hash on my laptop, run `./gradlew jmh` to reproduce.
+
+- `guava` uses `com.google.common.hash.Hashing.murmur3_128(0).hashString()`
+- `murmur*Bytes` uses `murmurhash3_x64_128` passing `s.getBytes(StandardCharsets.UTF_8)`
+- `murmur*String` calls `murmurhash3_x64_128` passing a string directly, it also reuses the 19-byte buffer
+- `murmurAsciiOptimizedString` calls `murmurhash3_x64_128_ascii`
+
 
 ACSCII (1-128 characters strings)
 ```
@@ -32,3 +45,13 @@ BenchString128.guavaUnicode         thrpt  100  22044.362 ±  228.743  ops/s
 BenchString128.murmurUnicodeBytes   thrpt  100  32272.569 ±  635.764  ops/s
 BenchString128.murmurUnicodeString  thrpt  100  36704.326 ±  237.645  ops/s
 ```
+
+# Memory usage
+Here are memory usage charts by different versions.
+
+![Memory Usage](mem_usage.png)
+
+- `Guava` is `com.google.common.hash.Hashing.murmur3_128(0).hashString()`
+- `Bytes` is `murmurhash3_x64_128` receiving `s.getBytes(StandardCharsets.UTF_8)`
+- `String` is `murmurhash3_x64_128` getting a string directly and having to allocate `buf19` on every call
+- `String, providede buffer` is `murmurhash3_x64_128` getting a string directly, reusing `buf19`
