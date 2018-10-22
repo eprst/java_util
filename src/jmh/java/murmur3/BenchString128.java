@@ -19,6 +19,7 @@ public class BenchString128 {
   @State(Scope.Thread)
   public static class MyState {
     final HashFunction guavaHash = Hashing.murmur3_128(0);
+    final byte[] buf19 = new byte[19];
     final MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
   }
 
@@ -55,14 +56,21 @@ public class BenchString128 {
   @Benchmark
   public void murmurUnicodeString(MyState state) {
     for (String s : UNICODE_STRINGS) {
-      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.pair);
     }
   }
 
   @Benchmark
   public void murmurAsciiString(MyState state) {
     for (String s : ASCII_STRINGS) {
-      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.pair);
+    }
+  }
+
+  @Benchmark
+  public void murmurAsciiOptimizedString(MyState state) {
+    for (String s : ASCII_STRINGS) {
+      MurmurHash3.murmurhash3_x64_128_ascii(s, 0, s.length(), 0, state.pair);
     }
   }
 

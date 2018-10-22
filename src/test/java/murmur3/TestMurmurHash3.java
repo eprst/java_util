@@ -49,10 +49,10 @@ public class TestMurmurHash3 extends TestCase {
   private final Charset utf8Charset = Charset.forName("UTF-8");
 
   private void doString(String s) {
-    doString(s, 0, 0);
+    doString(s, 0, 0, false);
   }
 
-  private void doString(String s, int pre, int post) {
+  private void doString(String s, int pre, int post, boolean ascii) {
     byte[] utf8 = s.getBytes(utf8Charset);
     int hash1 = MurmurHash3.murmurhash3_x86_32(utf8, pre, utf8.length - pre - post, 123456789);
     int hash2 = MurmurHash3.murmurhash3_x86_32(s, pre, s.length() - pre - post, 123456789);
@@ -77,11 +77,16 @@ public class TestMurmurHash3 extends TestCase {
     MurmurHash3.LongPair r1 = new MurmurHash3.LongPair();
     MurmurHash3.LongPair r2 = new MurmurHash3.LongPair();
     MurmurHash3.murmurhash3_x64_128(utf8, pre, utf8.length - pre - post, 123456789, r1);
-    MurmurHash3.murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, r2);
+    MurmurHash3.murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, null, r2);
     assertEquals(r1, r2);
     HashCode guava128 = guavaHash128.hashString(s.substring(pre, s.length() - post), utf8Charset);
     assertEquals(guava128.asLong(), r1.val1);
     assertEquals(guava128, HashCode.fromBytes(r1.getBytes()));
+
+    if (ascii) {
+      MurmurHash3.murmurhash3_x64_128_ascii(s, pre, s.length() - pre - post, 123456789, r2);
+      assertEquals(s, r1, r2);
+    }
   }
 
   public void testStringHash() {
@@ -131,7 +136,7 @@ public class TestMurmurHash3 extends TestCase {
 
       doString(s);
       doString(middle);
-      doString(s, pre, post);
+      doString(s, pre, post, false);
     }
 
   }
@@ -142,7 +147,7 @@ public class TestMurmurHash3 extends TestCase {
     for (int i = 0; i < 10000; i++) {
       int len = r.nextInt(256);
       String s = rsg.randomAscii(len);
-      doString(s);
+      doString(s, 0, 0, true);
     }
   }
 

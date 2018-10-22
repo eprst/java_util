@@ -380,10 +380,17 @@ public final class MurmurHash3 {
 
   /**
    * Returns the MurmurHash3_x86_128 hash of the UTF-8 bytes of the String without actually encoding
-   * the string to a temporary buffer. Results are placed in {@code out}.
+   * the string to a temporary buffer. Does not check if input is properly encoded.
+   *
+   * @param data data to encode
+   * @param offset start offset
+   * @param len length
+   * @param seed seed
+   * @param buf19 temporary 19-byte buffer to use. New one will be allocated if {@code null}
+   * @param out output pair to write results to
    */
-  public static void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, LongPair out) {
-    final byte[] encoded = new byte[19];
+  public static void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, byte[] buf19, LongPair out) {
+    final byte[] encoded = buf19 == null ? new byte[19] : buf19;
 
     // The original algorithm does have a 32 bit unsigned seed.
     // We have to mask to match the behavior of the unsigned types and prevent sign extension.
@@ -518,4 +525,121 @@ public final class MurmurHash3 {
     out.val2 = h2;
   }
 
+  /**
+   * Returns the MurmurHash3_x86_128 hash of the ASCII bytes of the String without actually encoding
+   * the string to a temporary buffer. Warning: will return invalid results if {@code data}
+   * contains non-ASCII characters! No checks are made.
+   * Results are placed in {@code out}.
+   */
+  public static void murmurhash3_x64_128_ascii(CharSequence data, int offset, int len, int seed, LongPair out) {
+    // The original algorithm does have a 32 bit unsigned seed.
+    // We have to mask to match the behavior of the unsigned types and prevent sign extension.
+    long h1 = seed & 0x00000000FFFFFFFFL;
+    long h2 = seed & 0x00000000FFFFFFFFL;
+
+    final long c1 = 0x87c37b91114253d5L;
+    final long c2 = 0x4cf5ad432745937fL;
+
+    int pos = offset;
+    int end = offset + len;
+
+    while (pos <= end - 16) {
+      long k1 = (data.charAt(pos++) & 0xffL);
+      k1 |= (data.charAt(pos++) & 0xffL) << 8;
+      k1 |= (data.charAt(pos++) & 0xffL) << 16;
+      k1 |= (data.charAt(pos++) & 0xffL) << 24;
+      k1 |= (data.charAt(pos++) & 0xffL) << 32;
+      k1 |= (data.charAt(pos++) & 0xffL) << 40;
+      k1 |= (data.charAt(pos++) & 0xffL) << 48;
+      k1 |= (data.charAt(pos++) & 0xffL) << 56;
+
+      long k2 = (data.charAt(pos++) & 0xffL);
+      k2 |= (data.charAt(pos++) & 0xffL) << 8;
+      k2 |= (data.charAt(pos++) & 0xffL) << 16;
+      k2 |= (data.charAt(pos++) & 0xffL) << 24;
+      k2 |= (data.charAt(pos++) & 0xffL) << 32;
+      k2 |= (data.charAt(pos++) & 0xffL) << 40;
+      k2 |= (data.charAt(pos++) & 0xffL) << 48;
+      k2 |= (data.charAt(pos++) & 0xffL) << 56;
+
+      k1 *= c1;
+      k1 = Long.rotateLeft(k1, 31);
+      k1 *= c2;
+      h1 ^= k1;
+      h1 = Long.rotateLeft(h1, 27);
+      h1 += h2;
+      h1 = h1 * 5 + 0x52dce729;
+      k2 *= c2;
+      k2 = Long.rotateLeft(k2, 33);
+      k2 *= c1;
+      h2 ^= k2;
+      h2 = Long.rotateLeft(h2, 31);
+      h2 += h1;
+      h2 = h2 * 5 + 0x38495ab5;
+    } // inner
+
+    long k1 = 0;
+    long k2 = 0;
+    int tail = end;
+
+    switch ((end - pos) & 15) {
+      case 15:
+        k2 = (data.charAt(--tail) & 0xffL) << 48;
+      case 14:
+        k2 |= (data.charAt(--tail) & 0xffL) << 40;
+      case 13:
+        k2 |= (data.charAt(--tail) & 0xffL) << 32;
+      case 12:
+        k2 |= (data.charAt(--tail) & 0xffL) << 24;
+      case 11:
+        k2 |= (data.charAt(--tail) & 0xffL) << 16;
+      case 10:
+        k2 |= (data.charAt(--tail) & 0xffL) << 8;
+      case 9:
+        k2 |= (data.charAt(--tail) & 0xffL);
+        k2 *= c2;
+        k2 = Long.rotateLeft(k2, 33);
+        k2 *= c1;
+        h2 ^= k2;
+      case 8:
+        k1 = (data.charAt(--tail) & 0xffL) << 56;
+      case 7:
+        k1 |= (data.charAt(--tail) & 0xffL) << 48;
+      case 6:
+        k1 |= (data.charAt(--tail) & 0xffL) << 40;
+      case 5:
+        k1 |= (data.charAt(--tail) & 0xffL) << 32;
+      case 4:
+        k1 |= (data.charAt(--tail) & 0xffL) << 24;
+      case 3:
+        k1 |= (data.charAt(--tail) & 0xffL) << 16;
+      case 2:
+        k1 |= (data.charAt(--tail) & 0xffL) << 8;
+      case 1:
+        k1 |= (data.charAt(--tail) & 0xffL);
+
+        k1 *= c1;
+        k1 = Long.rotateLeft(k1, 31);
+        k1 *= c2;
+        h1 ^= k1;
+    }
+
+    //----------
+    // finalization
+
+    h1 ^= len;
+    h2 ^= len;
+
+    h1 += h2;
+    h2 += h1;
+
+    h1 = fmix64(h1);
+    h2 = fmix64(h2);
+
+    h1 += h2;
+    h2 += h1;
+
+    out.val1 = h1;
+    out.val2 = h2;
+  }
 }
