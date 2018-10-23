@@ -22,4 +22,4 @@ deploy:
 before_install:
   - chmod +x gradlew
 script:
-  - ./gradlew --scan clean build
+  - ./gradlew clean build
