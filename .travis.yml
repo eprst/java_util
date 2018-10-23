@@ -20,4 +20,5 @@ deploy:
   skip_cleanup: true
   on:
     repo: eprst/murmur3
+    tags: true
   name: $project_version
