@@ -31,19 +31,19 @@ Here are results for 128-bit hash on my laptop, run `./gradlew jmh` to reproduce
 
 ACSCII (1-128 characters strings)
 ```
-Benchmark                                   Mode  Cnt       Score        Error  Units
-BenchString128.guavaAscii                  thrpt  100   38820.061  ±   767.128  ops/s
-BenchString128.murmurAsciiBytes            thrpt  100   79370.216  ±  1014.949  ops/s
-BenchString128.murmurAsciiString           thrpt  100   83249.135  ±   521.336  ops/s
-BenchString128.murmurAsciiOptimizedString  thrpt  100  155105.622  ±  1984.475  ops/s
+Benchmark                                   Mode  Cnt       Score      Error  Units
+BenchString128.guavaAscii                  thrpt  100   38820.061 ±  767.128  ops/s
+BenchString128.murmurAsciiBytes            thrpt  100   79370.216 ± 1014.949  ops/s
+BenchString128.murmurAsciiString           thrpt  100   83249.135 ±  521.336  ops/s
+BenchString128.murmurAsciiOptimizedString  thrpt  100  155105.622 ± 1984.475  ops/s
 ```
 
 Unicode (1-64 character strings)
 ```
-Benchmark                            Mode  Cnt      Score      Error  Units
-BenchString128.guavaUnicode         thrpt  100  22044.362 ±  228.743  ops/s
-BenchString128.murmurUnicodeBytes   thrpt  100  32272.569 ±  635.764  ops/s
-BenchString128.murmurUnicodeString  thrpt  100  36704.326 ±  237.645  ops/s
+Benchmark                            Mode  Cnt      Score     Error  Units
+BenchString128.guavaUnicode         thrpt  100  22044.362 ± 228.743  ops/s
+BenchString128.murmurUnicodeBytes   thrpt  100  32272.569 ± 635.764  ops/s
+BenchString128.murmurUnicodeString  thrpt  100  36704.326 ± 237.645  ops/s
 ```
 
 # Memory usage
