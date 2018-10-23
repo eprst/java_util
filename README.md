@@ -4,7 +4,7 @@
 Fast Murmur3 hash implementation for Java, mostly a fork of
 [yonik](https://github.com/yonik/java_util) work with
 String-optimized 128-bit implementation added. See [blog post](http://yonik.com/murmurhash3-for-java/)
-about the original implementation.
+about the original verion.
 
 There are 3 128-bit versions provided:
 - `murmurhash3_x64_128` which takes a byte buffer to hash
@@ -58,4 +58,4 @@ Here are memory usage charts by different versions.
 
 # Using
 Simply copy to your project or get from
-[central](https://search.maven.org/artifact/com.github.eprst/murmur3/0.1/jar).
+[maven central](https://search.maven.org/artifact/com.github.eprst/murmur3/0.1/jar).
