@@ -55,3 +55,7 @@ Here are memory usage charts by different versions.
 - `Bytes` is `murmurhash3_x64_128` receiving `s.getBytes(StandardCharsets.UTF_8)`
 - `String` is `murmurhash3_x64_128` getting a string directly and having to allocate `buf19` on every call
 - `String, providede buffer` is `murmurhash3_x64_128` getting a string directly, reusing `buf19`
+
+# Using
+Simply copy to your project or get from
+[central](https://search.maven.org/artifact/com.github.eprst/murmur3/0.1/jar).
