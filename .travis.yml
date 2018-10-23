@@ -7,8 +7,6 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-before_deploy:
-- export project_version=$(grep version gradle.properties | sed -e 's/version=\(.*\)-SNAPSHOT/\1/')
 deploy:
   skip_cleanup: true
   provider: releases
