@@ -9,15 +9,15 @@ about the original verion.
 There are 3 128-bit versions provided:
 - `murmurhash3_x64_128` which takes a byte buffer to hash
 - `murmurhash3_x64_128` which takes a `CharSequence` and treats it as a UTF-8 encoded string. It doesn't
-call a [quite expensive](http://www.evanjones.ca/software/java-string-encoding-internals.html) call to
-`String.getBytes` and decoding small chunks on the go instead. It runs in constant memory and uses a 19 element
-byte buffer which can be provided by the caller to avoid any allocations. See memory charts below to see the difference
+make a [quite expensive](http://www.evanjones.ca/software/java-string-encoding-internals.html) call to
+`String.getBytes` and decodes small chunks on the go instead. It runs in constant memory and uses a 19 element
+byte buffer which can be provided by the caller to avoid any allocations. See memory charts below for a  difference
 in memory consumption
-- `murmurhash3_x64_128_ascii` which takes a `CharSequence` and treats it as UTF-8 encoded string which contains
-only ASCII characters. Has zero allocations and provides a significant performance boost.
+- `murmurhash3_x64_128_ascii` which takes a `CharSequence` and treats it as UTF-8 encoded string with
+ASCII characters only. Has zero allocations and provides a significant performance boost.
 
 There are no checks made around string decoding operations, so wrong hashes will be generated if a non-ASCII characters
-are passed to `murmurhash3_x64_128_ascii` or `murmurhash3_x64_128` receives an illegal UTF-8 string, no errors will be
+are passed to `murmurhash3_x64_128_ascii` or if `murmurhash3_x64_128` receives an illegal UTF-8 string, no errors will be
 raised. 
 
 # Performance
