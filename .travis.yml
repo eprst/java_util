@@ -13,7 +13,7 @@ deploy:
   provider: releases
   api_key:
     secure: BSbjw3mQ3mZaA0hDcUlwK8gzg/AzvFFmLtpbLDTUtBVV/6WFWvxVM/GEgWPuLn8iDpR/G2L/9Jll1PxH+dy2wG/OGFWRT7IuPLdI7kQAhP7Fft4eaTCIuI4WcbKtbN/vUn1mYNJaIbRTt7znoyemL/lCGT8iP0QsaK9TJzxdeNogHBbB48gdVq5p8I7JnUbLGqyI+YBeLnHj7xVKadHW+f8UrShJvs4PwRhyks31wR0akhbibK6F/1DexAhoiW14Bwy8YZd5P3r6w5IjaUQTFLk/1ZszXHyN1a7qvVVu3AA/asrBljDjE3oFD6DpdyyxXhLY3e140IH8o9wI9Wqv1whA5NQ0vsW401mo+VbULKh3TQ79BGi8ImR24bTE2fq4L/4IpQ2sni+3mRURI+RMTtVfAT7+/pAwEyL4tHlwfVtv03PzumKBJTna2Bd4boHAzrhQh7n/PFJZisLjR9ybD9GQMsmjZYJk3owcfKjRcZLiA31TYWi1/1Q9Wn6YXE2vvH7wZBEkGBEzJ8TGtEZ49zuVhzInrhH3vSIcJ7FSdXshikY9ntE+1nsmPDMIu673By8dszMj6IUOD+ofdT53iXpO+0+g5xCyhFPW1ULgad75LQ0Qyy4TiNXoaG7mXsXcoiCo2r3MBzqASu38ksUjaxKlG/zqQgydDV7f5gNIoVE=
-  file_golb: true
+  file_glob: true
   file: "build/libs/*.jar"
   skip_cleanup: true
   on:
