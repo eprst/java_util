@@ -23,7 +23,7 @@ dependencies {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-ext.canSign = Project.hasProperty('signing.password')
+ext.canSign = project.hasProperty('signing.password')
 
 compileJava {
   options.compilerArgs << "-Xlint:unchecked" << "-Werror"
