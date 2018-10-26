@@ -21,7 +21,8 @@ are passed to `murmurhash3_x64_128_ascii` or if `murmurhash3_x64_128` receives a
 raised. 
 
 # Performance
-Here are results for 128-bit hash on my laptop, run `./gradlew jmh` to reproduce.
+Here are results for 128-bit hash on my laptop, run `./gradlew jmh` to reproduce. One point is given for
+hashing 100 random strings, so a score of `38820` for example means 3.8M hashes/sec.
 
 - `guava` uses `com.google.common.hash.Hashing.murmur3_128(0).hashString()`
 - `murmur*Bytes` uses `murmurhash3_x64_128` passing `s.getBytes(StandardCharsets.UTF_8)`
