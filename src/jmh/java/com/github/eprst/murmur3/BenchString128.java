@@ -1,4 +1,4 @@
-package murmur3;
+package com.github.eprst.murmur3;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;

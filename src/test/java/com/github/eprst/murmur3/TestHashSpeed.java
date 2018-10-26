@@ -1,4 +1,4 @@
-package murmur3;
+package com.github.eprst.murmur3;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -1,4 +1,4 @@
-package murmur3;
+package com.github.eprst.murmur3;
 
 import java.util.Objects;
 
@@ -52,8 +52,7 @@ public final class MurmurHash3 {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       final LongPair pair = (LongPair) o;
-      return val1 == pair.val1 &&
-             val2 == pair.val2;
+      return val1 == pair.val1 && val2 == pair.val2;
     }
 
     @Override
