@@ -1,5 +1,6 @@
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
 [![Build Status](https://travis-ci.com/eprst/murmur3.svg?branch=master)](https://travis-ci.com/eprst/murmur3)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.eprst/murmur3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.eprst/murmur3)
 
 Fast Murmur3 hash implementation for Java, mostly a fork of
 [yonik](https://github.com/yonik/java_util) work with
@@ -58,5 +59,5 @@ Here are memory usage charts by different versions.
 - `String, providede buffer` is `murmurhash3_x64_128` getting a string directly, reusing `buf19`
 
 # Using
-Simply copy to your project or get from
+Simply copy to your project or get it from
 [maven central](https://search.maven.org/artifact/com.github.eprst/murmur3/0.3/jar).
