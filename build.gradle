@@ -12,11 +12,11 @@ repositories {
 }
 
 dependencies {
-  jmh 'com.google.guava:guava:26.0-jre'
+  jmh 'com.google.guava:guava:27.0-jre'
   jmh 'org.apache.commons:commons-text:1.6'
   jmh sourceSets.test.output
 
-  testCompile 'com.google.guava:guava:26.0-jre'
+  testCompile 'com.google.guava:guava:27.0-jre'
   testCompile 'org.apache.commons:commons-text:1.6'
   testCompile 'junit:junit:4.12'
 }

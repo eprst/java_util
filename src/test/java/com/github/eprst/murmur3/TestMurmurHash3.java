@@ -31,7 +31,7 @@ public class TestMurmurHash3 extends TestCase {
       byte[] arr = new byte[bytes.length + offset];
       System.arraycopy(bytes, 0, arr, offset, bytes.length);
       int seed = 1;
-      MurmurHash3.LongPair result = new MurmurHash3.LongPair();
+      MurmurHash3.HashCode128 result = new MurmurHash3.HashCode128();
       for (int len = 0; len < bytes.length; len++) {
         seed *= 0x9e3779b1;
         int h = MurmurHash3.murmurhash3_x86_32(arr, offset, len, seed);
@@ -74,8 +74,8 @@ public class TestMurmurHash3 extends TestCase {
 //    assertEquals(guava32.asInt(), hash1);
 
     // now for 128
-    MurmurHash3.LongPair r1 = new MurmurHash3.LongPair();
-    MurmurHash3.LongPair r2 = new MurmurHash3.LongPair();
+    MurmurHash3.HashCode128 r1 = new MurmurHash3.HashCode128();
+    MurmurHash3.HashCode128 r2 = new MurmurHash3.HashCode128();
     MurmurHash3.murmurhash3_x64_128(utf8, pre, utf8.length - pre - post, 123456789, r1);
     MurmurHash3.murmurhash3_x64_128(s, pre, s.length() - pre - post, 123456789, null, r2);
     assertEquals(r1, r2);

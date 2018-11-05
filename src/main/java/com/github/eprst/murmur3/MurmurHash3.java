@@ -19,8 +19,11 @@ import java.util.Objects;
  * algorithms are optimized for their respective platforms.
  */
 public final class MurmurHash3 {
+  static final long c1 = 0x87c37b91114253d5L;
+  static final long c2 = 0x4cf5ad432745937fL;
+
   /** 128 bits of state */
-  public static final class LongPair {
+  public static final class HashCode128 {
     /** First part of the hash, use it if you only need 64-bit hash */
     public long val1;
     /** Second part of the hash */
@@ -29,21 +32,21 @@ public final class MurmurHash3 {
     public byte[] getBytes() {
       return new byte[]{
           (byte) val1,
-          (byte) (val1 >> 8),
-          (byte) (val1 >> 16),
-          (byte) (val1 >> 24),
-          (byte) (val1 >> 32),
-          (byte) (val1 >> 40),
-          (byte) (val1 >> 48),
-          (byte) (val1 >> 56),
+          (byte) (val1 >>> 8),
+          (byte) (val1 >>> 16),
+          (byte) (val1 >>> 24),
+          (byte) (val1 >>> 32),
+          (byte) (val1 >>> 40),
+          (byte) (val1 >>> 48),
+          (byte) (val1 >>> 56),
           (byte) val2,
-          (byte) (val2 >> 8),
-          (byte) (val2 >> 16),
-          (byte) (val2 >> 24),
-          (byte) (val2 >> 32),
-          (byte) (val2 >> 40),
-          (byte) (val2 >> 48),
-          (byte) (val2 >> 56),
+          (byte) (val2 >>> 8),
+          (byte) (val2 >>> 16),
+          (byte) (val2 >>> 24),
+          (byte) (val2 >>> 32),
+          (byte) (val2 >>> 40),
+          (byte) (val2 >>> 48),
+          (byte) (val2 >>> 56),
       };
     }
 
@@ -51,7 +54,7 @@ public final class MurmurHash3 {
     public boolean equals(final Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      final LongPair pair = (LongPair) o;
+      final HashCode128 pair = (HashCode128) o;
       return val1 == pair.val1 && val2 == pair.val2;
     }
 
@@ -283,14 +286,12 @@ public final class MurmurHash3 {
 
 
   /** Returns the MurmurHash3_x64_128 hash, placing the result in "out". */
-  public static void murmurhash3_x64_128(byte[] key, int offset, int len, int seed, LongPair out) {
+  public static void murmurhash3_x64_128(byte[] key, int offset, int len, int seed, HashCode128 out) {
     // The original algorithm does have a 32 bit unsigned seed.
     // We have to mask to match the behavior of the unsigned types and prevent sign extension.
     long h1 = seed & 0x00000000FFFFFFFFL;
     long h2 = seed & 0x00000000FFFFFFFFL;
 
-    final long c1 = 0x87c37b91114253d5L;
-    final long c2 = 0x4cf5ad432745937fL;
 
     int roundedEnd = offset + (len & 0xFFFFFFF0);  // round down to 16 byte block
     for (int i = offset; i < roundedEnd; i += 16) {
@@ -388,16 +389,13 @@ public final class MurmurHash3 {
    * @param buf19 temporary 19-byte buffer to use. New one will be allocated if {@code null}
    * @param out output pair to write results to
    */
-  public static void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, byte[] buf19, LongPair out) {
+  public static void murmurhash3_x64_128(CharSequence data, int offset, int len, int seed, byte[] buf19, HashCode128 out) {
     final byte[] encoded = buf19 == null ? new byte[19] : buf19;
 
     // The original algorithm does have a 32 bit unsigned seed.
     // We have to mask to match the behavior of the unsigned types and prevent sign extension.
     long h1 = seed & 0x00000000FFFFFFFFL;
     long h2 = seed & 0x00000000FFFFFFFFL;
-
-    final long c1 = 0x87c37b91114253d5L;
-    final long c2 = 0x4cf5ad432745937fL;
 
     int encOffset = 0;
     int bytes = 0;
@@ -530,14 +528,11 @@ public final class MurmurHash3 {
    * contains non-ASCII characters! No checks are made.
    * Results are placed in {@code out}.
    */
-  public static void murmurhash3_x64_128_ascii(CharSequence data, int offset, int len, int seed, LongPair out) {
+  public static void murmurhash3_x64_128_ascii(CharSequence data, int offset, int len, int seed, HashCode128 out) {
     // The original algorithm does have a 32 bit unsigned seed.
     // We have to mask to match the behavior of the unsigned types and prevent sign extension.
     long h1 = seed & 0x00000000FFFFFFFFL;
     long h2 = seed & 0x00000000FFFFFFFFL;
-
-    final long c1 = 0x87c37b91114253d5L;
-    final long c2 = 0x4cf5ad432745937fL;
 
     int pos = offset;
     int end = offset + len;

@@ -20,7 +20,7 @@ public class BenchString128 {
   public static class MyState {
     final HashFunction guavaHash = Hashing.murmur3_128(0);
     final byte[] buf19 = new byte[19];
-    final MurmurHash3.LongPair pair = new MurmurHash3.LongPair();
+    final MurmurHash3.HashCode128 hashCode = new MurmurHash3.HashCode128();
   }
 
   @Benchmark
@@ -41,7 +41,7 @@ public class BenchString128 {
   public void murmurUnicodeBytes(MyState state) {
     for (String s : UNICODE_STRINGS) {
       byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.pair);
+      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.hashCode);
     }
   }
 
@@ -49,28 +49,28 @@ public class BenchString128 {
   public void murmurAsciiBytes(MyState state) {
     for (String s : ASCII_STRINGS) {
       byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.pair);
+      MurmurHash3.murmurhash3_x64_128(bytes, 0, bytes.length, 0, state.hashCode);
     }
   }
 
   @Benchmark
   public void murmurUnicodeString(MyState state) {
     for (String s : UNICODE_STRINGS) {
-      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.hashCode);
     }
   }
 
   @Benchmark
   public void murmurAsciiString(MyState state) {
     for (String s : ASCII_STRINGS) {
-      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.pair);
+      MurmurHash3.murmurhash3_x64_128(s, 0, s.length(), 0, state.buf19, state.hashCode);
     }
   }
 
   @Benchmark
   public void murmurAsciiOptimizedString(MyState state) {
     for (String s : ASCII_STRINGS) {
-      MurmurHash3.murmurhash3_x64_128_ascii(s, 0, s.length(), 0, state.pair);
+      MurmurHash3.murmurhash3_x64_128_ascii(s, 0, s.length(), 0, state.hashCode);
     }
   }
 
