@@ -60,7 +60,7 @@ public final class MurmurHash3 {
 
     @Override
     public int hashCode() {
-      return Objects.hash(val1, val2);
+      return (int) (val1 * 31 + val2);
     }
 
     @Override
