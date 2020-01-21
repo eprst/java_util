@@ -1,7 +1,5 @@
 package com.github.eprst.murmur3;
 
-import java.util.Objects;
-
 /**
  * The MurmurHash3 algorithm was created by Austin Appleby and placed in the public domain.
  * This java port was authored by Yonik Seeley and also placed into the public domain.
@@ -28,6 +26,15 @@ public final class MurmurHash3 {
     public long val1;
     /** Second part of the hash */
     public long val2;
+
+    public HashCode128(long v1, long v2) {
+      val1 = v1;
+      val2 = v2;
+    }
+
+    public HashCode128() {
+      this(0, 0);
+    }
 
     public byte[] getBytes() {
       return new byte[]{
@@ -63,6 +70,14 @@ public final class MurmurHash3 {
       return (int) (val1 * 31 + val2);
     }
 
+    public int toInt() {
+      return (int) val1;
+    }
+
+    public long toLong() {
+      return val1;
+    }
+
     @Override
     public final String toString() {
       byte[] bytes = getBytes();
@@ -71,6 +86,28 @@ public final class MurmurHash3 {
         sb.append(hexDigits[(b >> 4) & 0xf]).append(hexDigits[b & 0xf]);
       }
       return sb.toString();
+    }
+
+    public static MurmurHash3.HashCode128 fromBytes(byte[] bytes) {
+      long val1 = ((long) (bytes[0]) & 0xff) |
+                  (((long) (bytes[1]) & 0xff) << 8) |
+                  (((long) (bytes[2]) & 0xff) << 16) |
+                  (((long) (bytes[3]) & 0xff) << 24) |
+                  (((long) (bytes[4]) & 0xff) << 32) |
+                  (((long) (bytes[5]) & 0xff) << 40) |
+                  (((long) (bytes[6]) & 0xff) << 48) |
+                  (((long) (bytes[7]) & 0xff) << 56);
+
+      long val2 = ((long) (bytes[8]) & 0xff) |
+                  (((long) (bytes[9]) & 0xff) << 8) |
+                  (((long) (bytes[10]) & 0xff) << 16) |
+                  (((long) (bytes[11]) & 0xff) << 24) |
+                  (((long) (bytes[12]) & 0xff) << 32) |
+                  (((long) (bytes[13]) & 0xff) << 40) |
+                  (((long) (bytes[14]) & 0xff) << 48) |
+                  (((long) (bytes[15]) & 0xff) << 56);
+
+      return new HashCode128(val1, val2);
     }
 
     private static final char[] hexDigits = "0123456789abcdef".toCharArray();

@@ -162,6 +162,18 @@ public class TestMurmurHash3 extends TestCase {
     }
   }
 
+  public void testToFromBytes() {
+    Random r = new Random();
+    for (int i = 0; i < 10000; i++) {
+      MurmurHash3.HashCode128 h1 = new MurmurHash3.HashCode128();
+      h1.val1 = r.nextLong();
+      h1.val2 = r.nextLong();
+      byte[] bytes = h1.getBytes();
+      MurmurHash3.HashCode128 h2 = MurmurHash3.HashCode128.fromBytes(bytes);
+      assertEquals(h1, h2);
+    }
+  }
+
 }
 
 

@@ -64,6 +64,12 @@ public final class HashingSink128 {
     return putBytes(bytes, 0, bytes.length);
   }
 
+  public HashingSink128 putMurmurHash3(MurmurHash3.HashCode128 hash) {
+    putLong(hash.val1);
+    putLong(hash.val2);
+    return this;
+  }
+
   private void munch() {
     long k1 = MurmurHash3.getLongLittleEndian(buffer, 0);
     long k2 = MurmurHash3.getLongLittleEndian(buffer, 8);
