@@ -11,13 +11,13 @@ deploy:
   skip_cleanup: true
   provider: releases
   api_key:
-    secure: BSbjw3mQ3mZaA0hDcUlwK8gzg/AzvFFmLtpbLDTUtBVV/6WFWvxVM/GEgWPuLn8iDpR/G2L/9Jll1PxH+dy2wG/OGFWRT7IuPLdI7kQAhP7Fft4eaTCIuI4WcbKtbN/vUn1mYNJaIbRTt7znoyemL/lCGT8iP0QsaK9TJzxdeNogHBbB48gdVq5p8I7JnUbLGqyI+YBeLnHj7xVKadHW+f8UrShJvs4PwRhyks31wR0akhbibK6F/1DexAhoiW14Bwy8YZd5P3r6w5IjaUQTFLk/1ZszXHyN1a7qvVVu3AA/asrBljDjE3oFD6DpdyyxXhLY3e140IH8o9wI9Wqv1whA5NQ0vsW401mo+VbULKh3TQ79BGi8ImR24bTE2fq4L/4IpQ2sni+3mRURI+RMTtVfAT7+/pAwEyL4tHlwfVtv03PzumKBJTna2Bd4boHAzrhQh7n/PFJZisLjR9ybD9GQMsmjZYJk3owcfKjRcZLiA31TYWi1/1Q9Wn6YXE2vvH7wZBEkGBEzJ8TGtEZ49zuVhzInrhH3vSIcJ7FSdXshikY9ntE+1nsmPDMIu673By8dszMj6IUOD+ofdT53iXpO+0+g5xCyhFPW1ULgad75LQ0Qyy4TiNXoaG7mXsXcoiCo2r3MBzqASu38ksUjaxKlG/zqQgydDV7f5gNIoVE=
+    secure: Y5dqjg8CHQC1KJM+pLsot+jMMzR6raE3OPCd8s3oMrGFg1iHf9AbBYiJ4h5zedIJu8HRu1Jo8+iZEYr85xOgDBjC9dsXBvLpsKvB2nPXFP9vD1dnkKbIBGOcj9a4pp0Q/sOsOEnqCSDV1m+xLRc2mdQraxdnoFoSN3J1yU1935qKULuVAwpd0C2/xP/T5LxQbtD+z47LtK3jmDYIQutZdkFLPjOZBwL/UJKotQLKQ9u0aLE1HwhAnT03OoTzyzWP5ul2LG3aw/zPEmuqhMjcu+Pp2pORRMdDoQKubUbz2CNpGSLajLoWPDjDXwyfA6bScfH8rCeLiAJJj6J30b/YwdnFjMAHPj8d556R9VbR5a6Zg1iPI8EI1W6f5Kz/nJ2hlqKjC2jTWtgRA0UsHmqjr3AU2xewHjgKe8nw+wHSQ+opbSHeZJUCRtHVE0MdIfrcCYQd8Cg3nhAdQrMSB9LfT27tHjx06fc6cm4pWL3sppyEskQHqMiomJBXKZD5xZRYN3kwKD1VgP3F997TNdXUbXrPw0p7gn+WwK89aarYshMeILF+dG9SrSb9J/WF9kKlJj5BrPzocPzE+ggMCG546JzdN3U+ms3UnOXi9b7lzePydoWk5LwuOnnpF8rDrD28lHvKks3zs3E7+72TcFPMrJutPPB/4oVnbLPOLsbzc34=
   file_glob: true
   file: build/libs/murmur3-*.jar
   on:
     repo: eprst/murmur3
     tags: true
 before_install:
-  - chmod +x gradlew
+- chmod +x gradlew
 script:
-  - ./gradlew clean build
+- "./gradlew clean build"
