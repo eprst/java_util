@@ -3,8 +3,8 @@ plugins {
   id "me.champeau.gradle.jmh" version "0.5.0"
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 repositories {
@@ -23,6 +23,7 @@ dependencies {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 ext.canSign = project.hasProperty('signing.password')
 
 compileJava {
@@ -33,75 +34,69 @@ javadoc {
   options.addStringOption('Xdoclint:none', '-quiet')
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
 test {
   afterTest { desc, result ->
     logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
   }
 }
 
-task javadocJar(type: Jar) {
-  archiveClassifier = 'javadoc'
-  from javadoc
-}
-
-task sourcesJar(type: Jar) {
-  archiveClassifier = 'sources'
-  from sourceSets.main.allSource
-}
-
 artifacts {
-  archives javadocJar, sourcesJar
+  archives jar, javadocJar, sourcesJar
 }
 
 tasks.withType(Sign) {
-  onlyIf { canSign }
+  onlyIf { canSign && isReleaseVersion }
 }
 
-signing {
-  sign configurations.archives
-}
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      pom.project {
-        name 'Murmur3'
-        packaging 'jar'
-        // optionally artifactId can be defined here
-        description 'Fast Murmur3 hash implementation for Java'
-        url 'https://github.com/eprst/murmur3'
-
-        scm {
-          connection 'scm:git:git://github.com/eprst/murmur.git'
-          developerConnection 'scm:git:git@github.com/eprst/murmur.git'
-          url 'https://github.com/eprst/murmur3'
-        }
-
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      pom {
+        name = 'Murmur3'
+        description = 'Fast Murmur3 hash implementation for Java'
+        url = 'https://github.com/eprst/murmur3'
         licenses {
           license {
-            name 'Unlicense'
-            url 'https://unlicense.org'
+            name = 'Unlicense'
+            url = 'https://unlicense.org'
           }
         }
-
         developers {
           developer {
-            id 'eprst'
-            name 'Konstantin Sobolev'
-            email 'konstantin.sobolev@gmail.com'
+            id = 'eprst'
+            name = 'Konstantin Sobolev'
+            email = 'konstantin.sobolev@gmail.com'
           }
+        }
+        scm {
+          connection = 'scm:git:git://github.com/eprst/murmur.git'
+          developerConnection = 'scm:git:git@github.com/eprst/murmur.git'
+          url = 'https://github.com/eprst/murmur3'
         }
       }
     }
   }
+  repositories {
+    maven {
+      def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+      def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+      url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+      credentials {
+        username = ossrhUsername
+        password = ossrhPassword
+      }
+    }
+  }
+}
+
+signing {
+  required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+  sign publishing.publications.mavenJava
 }
