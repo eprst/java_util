@@ -4,7 +4,7 @@
 
 Fast Murmur3 hash implementation for Java, mostly a fork of
 [yonik](https://github.com/yonik/java_util) work with
-String-optimized 128-bit implementation added. See [blog post](http://yonik.com/murmurhash3-for-java/)
+String-optimized 128-bit implementation and Guava-style sink added. See [blog post](http://yonik.com/murmurhash3-for-java/)
 about the original verion.
 
 There are 3 128-bit versions provided:
