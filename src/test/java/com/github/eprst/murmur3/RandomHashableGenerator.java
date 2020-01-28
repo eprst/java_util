@@ -7,7 +7,7 @@ public class RandomHashableGenerator {
   private Random r = new Random();
   private RandomStringsGenerator rsg = new RandomStringsGenerator();
 
-  public TestHashingSink.Hashable randomHashable() {
+  public TestHashingSink.Hashable randomHashable(int size) {
 //        return new TestHashingSink.HashableString(rsg.randomUnicode(200), StandardCharsets.UTF_8);
     switch (r.nextInt(10)) {
       case 0:
@@ -27,9 +27,9 @@ public class RandomHashableGenerator {
       case 7:
         return new TestHashingSink.HashableChar((char) r.nextInt());
       case 8:
-        return new TestHashingSink.HashableString(rsg.randomUnicode(200), StandardCharsets.UTF_8);
+        return new TestHashingSink.HashableString(rsg.randomUnicode(size), StandardCharsets.UTF_8);
       case 9:
-        return new TestHashingSink.HashableUtf8AsciiString(rsg.randomAscii(200));
+        return new TestHashingSink.HashableUtf8AsciiString(rsg.randomAscii(size));
       default:
         throw new RuntimeException();
     }

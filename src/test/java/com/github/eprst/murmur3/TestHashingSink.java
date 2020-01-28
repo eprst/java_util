@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 /**
  * @author <a href="mailto:konstantin@sumologic.com">Konstantin Sobolev</a>
@@ -115,7 +116,12 @@ public class TestHashingSink extends TestCase {
     RandomHashableGenerator g = new RandomHashableGenerator();
 
     for (int j = 0; j < 100; j++) {
-      Hashable h = g.randomHashable();
+      Hashable h = g.randomHashable(200);
+      test(h);
+    }
+
+    for (int j = 0; j < 10; j++) {
+      Hashable h = g.randomHashable(100000);
       test(h);
     }
   }
@@ -127,7 +133,14 @@ public class TestHashingSink extends TestCase {
 
     for (int j = 0; j < 100; j++) {
       for (int i = 0; i < num; i++) {
-        hashables[i] = g.randomHashable();
+        hashables[i] = g.randomHashable(200);
+      }
+      test(hashables);
+    }
+
+    for (int j = 0; j < 10; j++) {
+      for (int i = 0; i < num; i++) {
+        hashables[i] = g.randomHashable(100000);
       }
       test(hashables);
     }
@@ -137,7 +150,7 @@ public class TestHashingSink extends TestCase {
 
 
   private void test(Hashable... hashables) {
-    int seed = 0;
+    int seed = Math.abs(new Random().nextInt());
     Hasher g = Hashing.murmur3_128(seed).newHasher();
 
     HashingSink128 s = new HashingSink128(seed);
@@ -159,12 +172,13 @@ public class TestHashingSink extends TestCase {
           MurmurHash3.murmurhash3_x64_128(hs.s, 0, hs.s.length(), seed, null, c);
           System.out.println("Murmur3 result: " + c);
 
-          HashFunction guava = Hashing.murmur3_128(0);
+          HashFunction guava = Hashing.murmur3_128(seed);
           HashCode gh = guava.hashString(hs.s, Charsets.UTF_8);
           System.out.println("Guava result: " + gh);
         }
       }
-      assertEquals(h.toString(), guavaHash, result);
+      String message = "seed: " + seed+", hashable: " + h;
+      assertEquals(message, guavaHash, result);
     } else {
       assertEquals(guavaHash, result);
     }

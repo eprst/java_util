@@ -89,25 +89,10 @@ public final class MurmurHash3 {
     }
 
     public static MurmurHash3.HashCode128 fromBytes(byte[] bytes) {
-      long val1 = ((long) (bytes[0]) & 0xff) |
-                  (((long) (bytes[1]) & 0xff) << 8) |
-                  (((long) (bytes[2]) & 0xff) << 16) |
-                  (((long) (bytes[3]) & 0xff) << 24) |
-                  (((long) (bytes[4]) & 0xff) << 32) |
-                  (((long) (bytes[5]) & 0xff) << 40) |
-                  (((long) (bytes[6]) & 0xff) << 48) |
-                  (((long) (bytes[7]) & 0xff) << 56);
-
-      long val2 = ((long) (bytes[8]) & 0xff) |
-                  (((long) (bytes[9]) & 0xff) << 8) |
-                  (((long) (bytes[10]) & 0xff) << 16) |
-                  (((long) (bytes[11]) & 0xff) << 24) |
-                  (((long) (bytes[12]) & 0xff) << 32) |
-                  (((long) (bytes[13]) & 0xff) << 40) |
-                  (((long) (bytes[14]) & 0xff) << 48) |
-                  (((long) (bytes[15]) & 0xff) << 56);
-
-      return new HashCode128(val1, val2);
+      return new HashCode128(
+          getLongLittleEndian(bytes, 0),
+          getLongLittleEndian(bytes, 8)
+      );
     }
 
     private static final char[] hexDigits = "0123456789abcdef".toCharArray();
