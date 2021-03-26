@@ -28,6 +28,8 @@ public final class HashingSink128 {
   public HashingSink128 reset() {
     h1 = seed & 0x00000000FFFFFFFFL;
     h2 = seed & 0x00000000FFFFFFFFL;
+    bufferOffset = 0;
+    totalBytesHashed = 0;
     return this;
   }
 

@@ -146,6 +146,25 @@ public class TestHashingSink extends TestCase {
     }
   }
 
+  public void testReset() {
+    RandomHashableGenerator g = new RandomHashableGenerator();
+    Hashable h = g.randomHashable(200);
+
+    int seed = Math.abs(new Random().nextInt());
+
+    HashingSink128 s = new HashingSink128(seed);
+
+    h.sendToHashing(s);
+    MurmurHash3.HashCode128 hc1 = s.finish();
+    String result1 = hc1.toString();
+
+    h.sendToHashing(s);
+    MurmurHash3.HashCode128 hc2 = s.finish();
+    String result2 = hc2.toString();
+
+    assertEquals(result1, result2);
+  }
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
