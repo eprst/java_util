@@ -60,4 +60,4 @@ Here are memory usage charts by different versions.
 
 # Using
 Simply copy to your project or get it from
-[maven central](https://search.maven.org/artifact/com.github.eprst/murmur3/0.3/jar).
+[maven central](https://search.maven.org/artifact/com.github.eprst/murmur3/).
